@@ -1,0 +1,14 @@
+<h2>CalendarEvents</h2>
+<table>
+    <thead>
+        <tr>Title</tr>
+        <tr>ID</tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let event of events">
+            <td>{{ event.title }}</td>
+            <td>{{ event.id }}</td>
+        </tr>
+    </tbody>
+</table>
+
