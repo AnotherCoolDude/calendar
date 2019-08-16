@@ -23,9 +23,11 @@ export class CalendarEventsService {
       const c = new CalendarEvent();
       c.id = `${i}`;
       c.title = 'Hallo';
+      c.startDate = new Date();
+      c.endDate = new Date();
       events.push(c);
     }
-    return new Observable<CalendarEvent[]>(subscriber =>{
+    return new Observable<CalendarEvent[]>(subscriber => {
       subscriber.next(events);
     });
   }
@@ -34,8 +36,8 @@ export class CalendarEventsService {
     return this.httpClient.get<CalendarEvent[]>(environment.gateway + '/event');
   }
 
-  createEvent(event: CalendarEvent) {
-    this.httpClient.post<CalendarEvent>(environment.gateway + '/event', event, this.httpOptions);
+  addEvent(event: CalendarEvent): Observable<CalendarEvent> {
+    return this.httpClient.post<CalendarEvent>(environment.gateway + '/event', event, this.httpOptions);
   }
 
 }

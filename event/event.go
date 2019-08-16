@@ -35,12 +35,11 @@ func Get() []Event {
 }
 
 // Add adds a new event to the calendar and returns its ID
-func Add(title string) string {
-	e := newEventToday(title)
+func Add(event Event) string {
 	mtx.Lock()
-	events = append(events, e)
+	events = append(events, event)
 	mtx.Unlock()
-	return e.ID
+	return event.ID
 }
 
 func newEventToday(title string) Event {

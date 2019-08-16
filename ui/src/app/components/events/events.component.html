@@ -1,14 +1,29 @@
 <h2>Calendar Events</h2>
-<table>
+<table class="table">
     <thead>
         <th>Title</th>
         <th>ID</th>
+        <th>start date</th>
+        <th>end date</th>
     </thead>
     <tbody>
         <tr *ngFor="let event of events">
             <td>{{ event.title }}</td>
             <td>{{ event.id }}</td>
+            <td>{{ event.startDate.toLocaleString('de-DE') }}</td>
+            <td>{{ event.endDate.toLocaleString('de-DE') }}</td>
         </tr>
     </tbody>
 </table>
-
+<input placeholder="description..." [(ngModel)]="newEvent">
+<mat-form-field>
+    <input matInput [matDatepicker]="startDate" placeholder="pick a date" [(ngModel)]="startDateValue">
+    <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+    <mat-datepicker #startDate></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [matDatepicker]="endDate" placeholder="pick a date" [(ngModel)]="endDateValue">
+    <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+    <mat-datepicker #endDate></mat-datepicker>
+  </mat-form-field>
+<button class="btn btn-primary" (click)="addEvent()">Add</button>

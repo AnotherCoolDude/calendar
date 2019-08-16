@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/AnotherCoolDude/galendar/handler"
+	"github.com/AnotherCoolDude/calendar/handler"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,7 +36,13 @@ func main() {
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "DELETE, GET, OPTIONS, POST, PUT")
 
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
 		c.Next()
 	}
 }
