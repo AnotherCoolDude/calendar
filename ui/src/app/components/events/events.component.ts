@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarEventsService } from '../../services/calendar-events.service';
 import { CalendarEvent } from '../../models/calendarEvent';
-import { log } from 'util';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-events',
@@ -12,13 +12,17 @@ export class EventsComponent implements OnInit {
 
   events: CalendarEvent[];
   newEvent: string;
-  startDateValue: Date;
-  endDateValue: Date;
+  startDateValue: moment.Moment;
+  endDateValue: moment.Moment;
 
   constructor(private eventService: CalendarEventsService) { }
 
   ngOnInit() {
     this.getEvents();
+  }
+
+  format(m: moment.Moment): string {
+    return moment(m.toString()).format('D. MMMM YYYY HH:mm');
   }
 
   getEvents() {
@@ -39,8 +43,8 @@ export class EventsComponent implements OnInit {
     }
     const e = new CalendarEvent();
     e.title = this.newEvent;
-    e.startDate = this.startDateValue;
-    e.endDate = this.endDateValue;
+    e.startDate =  moment(this.startDateValue);
+    e.endDate = moment(this.endDateValue);
     this.eventService.addEvent(e).subscribe(() => {
       this.getEvents();
     });

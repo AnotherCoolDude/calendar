@@ -1,6 +1,8 @@
+import * as moment from 'moment';
+
 export class CalendarEvent {
     id: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: moment.Moment;
+    endDate: moment.Moment;
     title: string;
 }

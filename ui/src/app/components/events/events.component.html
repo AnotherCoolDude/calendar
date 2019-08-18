@@ -10,8 +10,8 @@
         <tr *ngFor="let event of events">
             <td>{{ event.title }}</td>
             <td>{{ event.id }}</td>
-            <td>{{ event.startDate.toLocaleString('de-DE') }}</td>
-            <td>{{ event.endDate.toLocaleString('de-DE') }}</td>
+            <td>{{ format(event.startDate) }}</td>
+            <td>{{ format(event.endDate) }}</td>
         </tr>
     </tbody>
 </table>

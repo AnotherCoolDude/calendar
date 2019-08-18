@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CalendarEvent } from '../models/calendarEvent';
 import { environment } from 'src/environments/environment';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,8 @@ export class CalendarEventsService {
       const c = new CalendarEvent();
       c.id = `${i}`;
       c.title = 'Hallo';
-      c.startDate = new Date();
-      c.endDate = new Date();
+      c.startDate = moment();
+      c.endDate = moment();
       events.push(c);
     }
     return new Observable<CalendarEvent[]>(subscriber => {

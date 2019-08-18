@@ -38,7 +38,7 @@ func eventFromRequest(req *http.Request) (event.Event, int, error) {
 
 	var e event.Event
 	err = json.Unmarshal(body, &e)
-	fmt.Printf("%+v\n", e)
+	fmt.Printf("[handler.go] new event received: %+v\n", e)
 	if err != nil {
 		log.Println("[handler.go] couldn't unmarshal request body")
 		return event.Event{}, http.StatusBadRequest, err

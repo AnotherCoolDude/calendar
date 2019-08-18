@@ -36,12 +36,15 @@ func (cdb *CalendarDatabase) Close() error {
 // Get returns all items with id
 func (cdb *CalendarDatabase) Get(property, searchstring string, rowsFunc func(rows *sql.Rows) error) error {
 	var searchQuery string
+	var rows *sql.Rows
+	var err error
 	if property == "" {
 		searchQuery = "SELECT * FROM events"
+		rows, err = cdb.db.Query(searchQuery)
 	} else {
 		searchQuery = fmt.Sprintf("SELECT * FROM events WHERE %s = ?", property)
+		rows, err = cdb.db.Query(searchQuery, searchstring)
 	}
-	rows, err := cdb.db.Query(searchQuery)
 	if err != nil {
 		fmt.Printf("could not find an item with property %s that matches %s\n", property, searchstring)
 		return err
