@@ -37,13 +37,10 @@ export class EventsComponent implements OnInit {
     if (typeof this.startDateValue === 'undefined' || typeof this.endDateValue === 'undefined') {
       return;
     }
-    log(`${this.startDateValue}`);
-    log(`${this.endDateValue}`);
     const e = new CalendarEvent();
     e.title = this.newEvent;
     e.startDate = this.startDateValue;
     e.endDate = this.endDateValue;
-    log(JSON.stringify(e));
     this.eventService.addEvent(e).subscribe(() => {
       this.getEvents();
     });

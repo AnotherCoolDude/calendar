@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"path"
+
+	"github.com/AnotherCoolDude/calendar/event"
 
 	"github.com/AnotherCoolDude/calendar/handler"
 	"github.com/gin-gonic/gin"
@@ -10,9 +11,7 @@ import (
 
 func main() {
 	r := gin.Default()
-
 	r.Use(corsMiddleware())
-	fmt.Print()
 
 	calendar := r.Group("/")
 	calendar.GET("/event", handler.GetEventsHandler)
@@ -27,6 +26,8 @@ func main() {
 			c.File("./ui/dist/ui/" + path.Join(dir, file))
 		}
 	})
+
+	defer event.CloseDBConnection()
 
 	if err := r.Run(":3000"); err != nil {
 		panic(err)
