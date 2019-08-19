@@ -5,13 +5,17 @@
         <th>ID</th>
         <th>start date</th>
         <th>end date</th>
+        <th>primary Color</th>
+        <th>secondary Color</th>
     </thead>
     <tbody>
         <tr *ngFor="let event of events">
             <td>{{ event.title }}</td>
             <td>{{ event.id }}</td>
-            <td>{{ format(event.startDate) }}</td>
-            <td>{{ format(event.endDate) }}</td>
+            <td>{{ format(event.start) }}</td>
+            <td>{{ format(event.end) }}</td>
+            <td>{{ event.color.primary }}</td>
+            <td>{{ event.color.secondary }}</td>
         </tr>
     </tbody>
 </table>

@@ -12,8 +12,8 @@ export class EventsComponent implements OnInit {
 
   events: CalendarEvent[];
   newEvent: string;
-  startDateValue: moment.Moment;
-  endDateValue: moment.Moment;
+  startDateValue: Date;
+  endDateValue: Date;
 
   constructor(private eventService: CalendarEventsService) { }
 
@@ -21,7 +21,7 @@ export class EventsComponent implements OnInit {
     this.getEvents();
   }
 
-  format(m: moment.Moment): string {
+  format(m: Date): string {
     return moment(m.toString()).format('D. MMMM YYYY HH:mm');
   }
 
@@ -43,8 +43,9 @@ export class EventsComponent implements OnInit {
     }
     const e = new CalendarEvent();
     e.title = this.newEvent;
-    e.startDate =  moment(this.startDateValue);
-    e.endDate = moment(this.endDateValue);
+    e.start =  this.startDateValue;
+    e.end = this.endDateValue;
+    e.color = {primary: '#1e90ff', secondary: '#D1E8FF'}
     this.eventService.addEvent(e).subscribe(() => {
       this.getEvents();
     });

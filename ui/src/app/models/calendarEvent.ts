@@ -1,8 +1,10 @@
 import * as moment from 'moment';
+import { EventColor } from 'calendar-utils';
 
 export class CalendarEvent {
     id: string;
-    startDate: moment.Moment;
-    endDate: moment.Moment;
+    start: Date;
+    end: Date;
     title: string;
+    color: EventColor;
 }

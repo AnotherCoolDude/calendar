@@ -15,7 +15,7 @@ type CalendarDatabase struct {
 
 // Connect connects to table from database
 func Connect() (*CalendarDatabase, error) {
-	db, err := sql.Open("mysql", "root:a9V7-dF4@tcp(localhost)/test_calendar?parseTime=true")
+	db, err := sql.Open("mysql", "christian@tcp(localhost)/test_calendar?parseTime=true")
 	if err != nil {
 		fmt.Println("could not open database")
 		return &CalendarDatabase{}, err

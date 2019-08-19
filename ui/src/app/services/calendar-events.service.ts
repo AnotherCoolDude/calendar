@@ -18,20 +18,20 @@ export class CalendarEventsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getDummyEvents(): Observable<CalendarEvent[]> {
-    const events: CalendarEvent[] = [];
-    for (let i = 0; i < 3; i++) {
-      const c = new CalendarEvent();
-      c.id = `${i}`;
-      c.title = 'Hallo';
-      c.startDate = moment();
-      c.endDate = moment();
-      events.push(c);
-    }
-    return new Observable<CalendarEvent[]>(subscriber => {
-      subscriber.next(events);
-    });
-  }
+  // getDummyEvents(): Observable<CalendarEvent[]> {
+  //   const events: CalendarEvent[] = [];
+  //   for (let i = 0; i < 3; i++) {
+  //     const c = new CalendarEvent();
+  //     c.id = `${i}`;
+  //     c.title = 'Hallo';
+  //     c.startDate = new Date();
+  //     c.endDate = new Date();
+  //     events.push(c);
+  //   }
+  //   return new Observable<CalendarEvent[]>(subscriber => {
+  //     subscriber.next(events);
+  //   });
+  // }
 
   getEvents(): Observable<CalendarEvent[]> {
     return this.httpClient.get<CalendarEvent[]>(environment.gateway + '/event');

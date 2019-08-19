@@ -7,8 +7,6 @@ import (
 	"time"
 
 	"github.com/AnotherCoolDude/calendar/database"
-
-	"github.com/rs/xid"
 )
 
 var (
@@ -33,10 +31,17 @@ func initialiseEvents() {
 
 // Event represents a event in a calendar
 type Event struct {
-	ID        string    `json:"id,omitempty"`
-	StartDate time.Time `json:"startDate,omitempty"`
-	EndDate   time.Time `json:"endDate,omitempty"`
+	ID        string    `json:"id"`
+	StartDate time.Time `json:"start"`
+	EndDate   time.Time `json:"end"`
 	Title     string    `json:"title"`
+	Color     Color     `json:"color"`
+}
+
+// Color wraps colors in a struct
+type Color struct {
+	Primary   string `json:"primary"`
+	Secondary string `json:"secondary"`
 }
 
 // Get returns all events
@@ -60,23 +65,10 @@ func CloseDBConnection() {
 	cdb.Close()
 }
 
-func newEventToday(title string) Event {
-	return newEvent(time.Now(), time.Now(), title)
-}
-
-func newEvent(startDate, endDate time.Time, title string) Event {
-	return Event{
-		ID:        xid.New().String(),
-		StartDate: startDate,
-		EndDate:   endDate,
-		Title:     title,
-	}
-}
-
 func addEventToDatabase(event *Event) int64 {
 	sdString := event.StartDate.Format("2006-01-02 15:04:05")
 	edString := event.EndDate.Format("2006-01-02 15:04:05")
-	id, err := cdb.Insert(event.ID, event.Title, sdString, edString)
+	id, err := cdb.Insert(event.ID, event.Title, sdString, edString, event.Color.Primary, event.Color.Secondary)
 	if err != nil {
 		fmt.Println(err)
 		return 0
@@ -89,7 +81,7 @@ func getEventsFromDatabase() []Event {
 	err := cdb.Get("", "", func(rows *sql.Rows) error {
 		for rows.Next() {
 			var e Event
-			err := rows.Scan(&e.ID, &e.Title, &e.StartDate, &e.EndDate)
+			err := rows.Scan(&e.ID, &e.Title, &e.StartDate, &e.EndDate, &e.Color.Primary, &e.Color.Secondary)
 			if err != nil {
 				rows.Close()
 				return err

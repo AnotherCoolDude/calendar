@@ -12,11 +12,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatInputModule } from '@angular/material';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalMonthViewComponent } from './components/cal-month-view/cal-month-view.component';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EventsComponent
+    EventsComponent,
+    CalMonthViewComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +32,12 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     MatDatepickerModule,
     MatFormFieldModule,
     MatMomentDateModule,
-    MatInputModule
+    MatInputModule,
+    NgbModalModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    })
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},

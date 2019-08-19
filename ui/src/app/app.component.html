@@ -1,23 +1,24 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">calendar</a>
-
+      <a class="navbar-brand">calendar</a>
       <button
         class="btn btn-light btn-margin"
-        routerLink="/">
-        Home
+        routerLink="/events">
+        Events
       </button>
+      <button
+      class="btn btn-light btn-margin"
+      routerLink="/cal-monthly">
+      Monatsansicht
+    </button>
     </div>
   </div>
 </nav>
-
-
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm">
-        <app-events></app-events>
-      <!-- <router-outlet></router-outlet> -->
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
