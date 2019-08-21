@@ -4,6 +4,7 @@ import { CalendarEventsService } from '../../services/calendar-events.service';
 import { Subject } from 'rxjs';
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours} from 'date-fns';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DatabaseCalendarEvent } from 'src/app/models/databaseCalendarEvent';
 
 @Component({
   selector: 'app-cal-month-view',
@@ -15,7 +16,7 @@ export class CalMonthViewComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   viewDate: Date = new Date();
-  events: CalendarEvent[] = [];
+  events: DatabaseCalendarEvent[] = [];
   refresh: Subject<any> = new Subject();
   activeDayIsOpen: boolean;
   view: CalendarView = CalendarView.Month;
@@ -49,23 +50,10 @@ export class CalMonthViewComponent implements OnInit {
   }
 
   getEvents() {
-    let c = this.eventService.getCalendarEvents();
-    c.subscribe(item => {console.log(item)});
-    
     this.eventService.getCalendarEvents().subscribe(events => {
-      events.forEach(e => {
-        e.actions = this.actions;
-      });
       this.events = [];
       this.events = events;
-      this.events.push({
-        id: '10',
-        title: 'hardcoded',
-        start: new Date(),
-        end: new Date(),
-        color: {primary: '#ad2121', secondary: '#FAE3E3'},
-      });
-      // console.log(this.events);
+      this.refresh.next();
     });
   }
 

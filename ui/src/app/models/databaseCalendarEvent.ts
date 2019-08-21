@@ -1,22 +1,33 @@
-import { CalendarEvent } from 'angular-calendar/angular-calendar';
+import { CalendarEventAction, CalendarEvent } from 'angular-calendar/angular-calendar';
 
 export class DatabaseCalendarEvent implements CalendarEvent {
     id: string;
     start: Date;
     end: Date;
-    startDate: Date;
-    endDate: Date;
     title: string;
-    primaryColor: string = '';
-    secondaryColor: string = '';
+    actions?: CalendarEventAction[];
     color: {primary: string, secondary: string};
 
-    set primaryColor() {
-        this.color.primary = this.primaryColor;
+    constructor(dbResponse?: any) {
+        if (dbResponse) {
+        this.id = dbResponse.id;
+        this.start = new Date(dbResponse.startDate);
+        this.end = new Date(dbResponse.endDate);
+        this.title = dbResponse.title;
+        this.color = {primary: dbResponse.primaryColor, secondary: dbResponse.secondaryColor};
+        }
     }
 
-    set secondaryColor() {
-        this.color.secondary = this.secondaryColor;
+    dbObject(): any {
+        return {
+            id: this.id,
+            startDate: this.start,
+            endDate: this.end,
+            title: this.title,
+            primaryColor: this.color.primary,
+            secondaryColor: this.color.secondary,
+        };
     }
-    
 }
+
+

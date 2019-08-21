@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarEventsService } from '../../services/calendar-events.service';
 import { CalendarEvent } from 'node_modules/angular-calendar/angular-calendar';
+import { DatabaseCalendarEvent } from '../../models/databaseCalendarEvent';
 import * as moment from 'moment';
 
 @Component({
@@ -10,7 +11,7 @@ import * as moment from 'moment';
 })
 export class EventsComponent implements OnInit {
 
-  events: CalendarEvent[];
+  events: DatabaseCalendarEvent[];
   newEvent: string;
   startDateValue: Date;
   endDateValue: Date;
@@ -35,12 +36,12 @@ export class EventsComponent implements OnInit {
     if (typeof this.startDateValue === 'undefined' || typeof this.endDateValue === 'undefined') {
       return;
     }
-    const e = {
-      title: this.newEvent,
-      start: this.startDateValue,
-      end: this.endDateValue,
-      color: {primary: '#1e90ff', secondary: '#D1E8FF'}
-    };
+    const e = new DatabaseCalendarEvent();
+    e.id = '';
+    e.title = this.newEvent;
+    e.start = this.startDateValue;
+    e.end = this.endDateValue;
+    e.color = {primary: '#1e90ff', secondary: '#D1E8FF'};
     this.eventService.addCalendarEvent(e).subscribe(() => {
       this.getEvents();
     });

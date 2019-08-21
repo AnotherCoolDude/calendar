@@ -9,12 +9,16 @@ import (
 
 	"github.com/AnotherCoolDude/calendar/event"
 	"github.com/gin-gonic/gin"
-	"github.com/rs/xid"
 )
 
 // GetEventsHandler returns all events
 func GetEventsHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, event.Get())
+}
+
+// GetDummysEventsHandler returns dummy events
+func GetDummysEventsHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, event.GetDummyEvents())
 }
 
 // AddEventHandler adds a new event to events
@@ -26,6 +30,17 @@ func AddEventHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(code, gin.H{"id": event.Add(e)})
+}
+
+// AddDummyEventHandler adds a new event to the dummy events
+func AddDummyEventHandler(c *gin.Context) {
+	e, code, err := eventFromRequest(c.Request)
+
+	if err != nil {
+		c.JSON(code, err)
+		return
+	}
+	c.JSON(code, gin.H{"id": event.AddDummyEvent(e)})
 }
 
 func eventFromRequest(req *http.Request) (event.Event, int, error) {
@@ -43,6 +58,6 @@ func eventFromRequest(req *http.Request) (event.Event, int, error) {
 		log.Println("[handler.go] couldn't unmarshal request body")
 		return event.Event{}, http.StatusBadRequest, err
 	}
-	e.ID = xid.New().String()
+	e.GenerateID()
 	return e, http.StatusOK, nil
 }

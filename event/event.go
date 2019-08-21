@@ -3,6 +3,7 @@ package event
 import (
 	"database/sql"
 	"fmt"
+	"github.com/rs/xid"
 	"sync"
 	"time"
 
@@ -39,6 +40,11 @@ type Event struct {
 	SecondaryColor string    `json:"secondaryColor"`
 }
 
+// GenerateID generates a new id for e
+func (e *Event) GenerateID() {
+	e.ID = xid.New().String()
+}
+
 // Get returns all events
 func Get() []Event {
 	ee := getEventsFromDatabase()
@@ -46,11 +52,51 @@ func Get() []Event {
 	return ee
 }
 
+// GetDummyEvents returns dummy events for testing purposes
+func GetDummyEvents() []Event {
+	if len(events) == 0 {
+		events = []Event{
+			Event{
+				ID:             xid.New().String(),
+				StartDate:      time.Now(),
+				EndDate:        time.Now().Add(2 * 24 * time.Hour),
+				Title:          "first dummy event",
+				PrimaryColor:   "#ad2121",
+				SecondaryColor: "#FAE3E3",
+			},
+			Event{
+				ID:             xid.New().String(),
+				StartDate:      time.Now().Add(3 * 24 * time.Hour),
+				EndDate:        time.Now().Add(4 * 24 * time.Hour),
+				Title:          "second dummy event",
+				PrimaryColor:   "#1e90ff",
+				SecondaryColor: "#D1E8FF",
+			},
+			Event{
+				ID:             xid.New().String(),
+				StartDate:      time.Now().Add(6 * 24 * time.Hour),
+				EndDate:        time.Now().Add(6 * 24 * time.Hour),
+				Title:          "third dummy event",
+				PrimaryColor:   "#e3bc08",
+				SecondaryColor: "#FDF1BA",
+			},
+		}
+	}
+	return events
+}
+
 // Add adds a new event to the calendar and returns its ID
 func Add(event Event) string {
 	mtx.Lock()
-	events = append(events, event)
 	addEventToDatabase(&event)
+	mtx.Unlock()
+	return event.ID
+}
+
+// AddDummyEvent adds a new dummy event to events
+func AddDummyEvent(event Event) string {
+	mtx.Lock()
+	events = append(events, event)
 	mtx.Unlock()
 	return event.ID
 }
