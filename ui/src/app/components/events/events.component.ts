@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarEventsService } from '../../services/calendar-events.service';
-import { CalendarEvent } from '../../models/calendarEvent';
+import { CalendarEvent } from 'node_modules/angular-calendar/angular-calendar';
 import * as moment from 'moment';
 
 @Component({
@@ -26,13 +26,7 @@ export class EventsComponent implements OnInit {
   }
 
   getEvents() {
-    this.eventService.getEvents().subscribe(events => {
-      this.events = events;
-    });
-  }
-
-  getDummyEvents() {
-    this.eventService.getEvents().subscribe(events => {
+    this.eventService.getCalendarEvents().subscribe(events => {
       this.events = events;
     });
   }
@@ -41,12 +35,13 @@ export class EventsComponent implements OnInit {
     if (typeof this.startDateValue === 'undefined' || typeof this.endDateValue === 'undefined') {
       return;
     }
-    const e = new CalendarEvent();
-    e.title = this.newEvent;
-    e.start =  this.startDateValue;
-    e.end = this.endDateValue;
-    e.color = {primary: '#1e90ff', secondary: '#D1E8FF'}
-    this.eventService.addEvent(e).subscribe(() => {
+    const e = {
+      title: this.newEvent,
+      start: this.startDateValue,
+      end: this.endDateValue,
+      color: {primary: '#1e90ff', secondary: '#D1E8FF'}
+    };
+    this.eventService.addCalendarEvent(e).subscribe(() => {
       this.getEvents();
     });
   }

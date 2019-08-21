@@ -19,6 +19,7 @@ export class CalMonthViewComponent implements OnInit {
   refresh: Subject<any> = new Subject();
   activeDayIsOpen: boolean;
   view: CalendarView = CalendarView.Month;
+  CalendarView = CalendarView;
 
   modalData: {
     action: string;
@@ -45,21 +46,26 @@ export class CalMonthViewComponent implements OnInit {
 
   ngOnInit() {
     this.getEvents();
-    this.refresh.next();
   }
 
   getEvents() {
-    this.eventService.getEvents().subscribe(events => {
-      events.map(e => {
-        this.events.push({
-          start: new Date(e.start),
-          end: new Date(e.end),
-          title: e.title,
-          color: e.color,
-          actions: this.actions
-        })
+    let c = this.eventService.getCalendarEvents();
+    c.subscribe(item => {console.log(item)});
+    
+    this.eventService.getCalendarEvents().subscribe(events => {
+      events.forEach(e => {
+        e.actions = this.actions;
       });
-      console.log(this.events);
+      this.events = [];
+      this.events = events;
+      this.events.push({
+        id: '10',
+        title: 'hardcoded',
+        start: new Date(),
+        end: new Date(),
+        color: {primary: '#ad2121', secondary: '#FAE3E3'},
+      });
+      // console.log(this.events);
     });
   }
 

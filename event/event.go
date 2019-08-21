@@ -31,17 +31,12 @@ func initialiseEvents() {
 
 // Event represents a event in a calendar
 type Event struct {
-	ID        string    `json:"id"`
-	StartDate time.Time `json:"start"`
-	EndDate   time.Time `json:"end"`
-	Title     string    `json:"title"`
-	Color     Color     `json:"color"`
-}
-
-// Color wraps colors in a struct
-type Color struct {
-	Primary   string `json:"primary"`
-	Secondary string `json:"secondary"`
+	ID             string    `json:"id"`
+	StartDate      time.Time `json:"startDate"`
+	EndDate        time.Time `json:"endDate"`
+	Title          string    `json:"title"`
+	PrimaryColor   string    `json:"primaryColor"`
+	SecondaryColor string    `json:"secondaryColor"`
 }
 
 // Get returns all events
@@ -68,7 +63,7 @@ func CloseDBConnection() {
 func addEventToDatabase(event *Event) int64 {
 	sdString := event.StartDate.Format("2006-01-02 15:04:05")
 	edString := event.EndDate.Format("2006-01-02 15:04:05")
-	id, err := cdb.Insert(event.ID, event.Title, sdString, edString, event.Color.Primary, event.Color.Secondary)
+	id, err := cdb.Insert(event.ID, event.Title, sdString, edString, event.PrimaryColor, event.SecondaryColor)
 	if err != nil {
 		fmt.Println(err)
 		return 0
@@ -81,12 +76,11 @@ func getEventsFromDatabase() []Event {
 	err := cdb.Get("", "", func(rows *sql.Rows) error {
 		for rows.Next() {
 			var e Event
-			err := rows.Scan(&e.ID, &e.Title, &e.StartDate, &e.EndDate, &e.Color.Primary, &e.Color.Secondary)
+			err := rows.Scan(&e.ID, &e.Title, &e.StartDate, &e.EndDate, &e.PrimaryColor, &e.SecondaryColor)
 			if err != nil {
 				rows.Close()
 				return err
 			}
-			fmt.Printf("%+v\n", e)
 			events = append(events, e)
 		}
 		rows.Close()

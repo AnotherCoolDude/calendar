@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CalendarEvent } from '../models/calendarEvent';
+import { map } from 'rxjs/operators';
+import { DatabaseCalendarEvent } from '../models/databaseCalendarEvent';
+import { CalendarEvent } from 'node_modules/angular-calendar/angular-calendar';
 import { environment } from 'src/environments/environment';
-import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,27 +19,51 @@ export class CalendarEventsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  // getDummyEvents(): Observable<CalendarEvent[]> {
-  //   const events: CalendarEvent[] = [];
-  //   for (let i = 0; i < 3; i++) {
-  //     const c = new CalendarEvent();
-  //     c.id = `${i}`;
-  //     c.title = 'Hallo';
-  //     c.startDate = new Date();
-  //     c.endDate = new Date();
-  //     events.push(c);
-  //   }
-  //   return new Observable<CalendarEvent[]>(subscriber => {
-  //     subscriber.next(events);
-  //   });
-  // }
+  getCalendarEvents(){
+  //  this.httpClient.get(environment.gateway + '/event').forEach((dbevent: DatabaseCalendarEvent) => ({
+  //     id: dbevent.id,
+  //     title: dbevent.title,
+  //     start: new Date(dbevent.startDate),
+  //     end: new Date(dbevent.endDate),
+  //     color: {primary: dbevent.primaryColor, secondary: dbevent.secondaryColor}
+  //   })).then();
 
-  getEvents(): Observable<CalendarEvent[]> {
-    return this.httpClient.get<CalendarEvent[]>(environment.gateway + '/event');
+    return this.httpClient.get<DatabaseCalendarEvent[]>(environment.gateway + '/event')
+      .pipe(
+        map(dbevent => ({
+        id: dbevent.id,
+        title: dbevent.title,
+        start: new Date(dbevent.startDate),
+        end: new Date(dbevent.endDate),
+       color: {primary: dbevent.primaryColor, secondary: dbevent.secondaryColor}
+      }))
+    ).subscribe(obs => {console.log(obs)});
+
+    this.httpClient.get<DatabaseCalendarEvent[]>(environment.gateway + '/event').subscribe(events => {
+      let m = events.map((event: DatabaseCalendarEvent) => ({
+        id: event.id,
+        title: event.title,
+        start: new Date(event.startDate),
+        end: new Date(event.endDate),
+        color: {primary: event.primaryColor, secondary: event.secondaryColor}
+      }));
+      
+    });
+    return new Observable<CalendarEvent[]>(subscriber => {
+      subscriber.next(cEvents);
+      subscriber.complete();
+    });
   }
 
-  addEvent(event: CalendarEvent): Observable<CalendarEvent> {
-    return this.httpClient.post<CalendarEvent>(environment.gateway + '/event', event, this.httpOptions);
+  addCalendarEvent(event: CalendarEvent): Observable<string> {
+    const dbCalendarEvent = new DatabaseCalendarEvent();
+    dbCalendarEvent.id = '';
+    dbCalendarEvent.startDate = event.start;
+    dbCalendarEvent.endDate = event.end;
+    dbCalendarEvent.title = event.title;
+    dbCalendarEvent.primaryColor = event.color.primary;
+    dbCalendarEvent.secondaryColor = event.color.secondary;
+    return this.httpClient.post<string>(environment.gateway + '/event', dbCalendarEvent, this.httpOptions);
   }
 
 }
