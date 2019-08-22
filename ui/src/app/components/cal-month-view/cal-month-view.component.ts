@@ -77,17 +77,14 @@ export class CalMonthViewComponent implements OnInit {
     newStart,
     newEnd
   }: CalendarEventTimesChangedEvent): void {
-    this.events = this.events.map(iEvent => {
-      if (iEvent === event) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd
-        };
-      }
-      return iEvent;
-    });
-    this.handleEvent('Dropped or resized', event);
+      this.events = this.events.map(e => {
+        if (e.id === event.id) {
+          e.start = newStart;
+          e.end = newEnd;
+        }
+        return e;
+      });
+      this.handleEvent('Dropped or resized', event);
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {

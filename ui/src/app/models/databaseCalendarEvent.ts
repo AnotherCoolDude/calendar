@@ -5,8 +5,16 @@ export class DatabaseCalendarEvent implements CalendarEvent {
     start: Date;
     end: Date;
     title: string;
-    actions?: CalendarEventAction[];
     color: {primary: string, secondary: string};
+
+    actions?: CalendarEventAction[];
+    allDay?: boolean;
+    cssClass?: string;
+    resizable?: {
+        beforeStart?: boolean;
+        afterEnd?: boolean;
+    };
+    draggable?: boolean;
 
     constructor(dbResponse?: any) {
         if (dbResponse) {
