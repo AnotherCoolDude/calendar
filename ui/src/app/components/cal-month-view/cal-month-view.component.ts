@@ -51,7 +51,14 @@ export class CalMonthViewComponent implements OnInit {
 
   getEvents() {
     this.eventService.getCalendarEvents().subscribe(events => {
-      // events.forEach(e => {e.actions = this.actions;});
+      events.forEach( e => {
+        e.actions = this.actions;
+        e.draggable = true;
+        e.resizable = {
+          beforeStart: true,
+          afterEnd: true,
+        };
+      } );
       this.events = [];
       this.events = events;
       this.refresh.next();

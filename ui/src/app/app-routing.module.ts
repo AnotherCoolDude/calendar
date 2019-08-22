@@ -6,9 +6,8 @@ import { EventsComponent } from './components/events/events.component';
 
 
 const routes: Routes = [
-  {path: '', component: AppComponent},
   {path: 'events', component: EventsComponent},
-  {path: 'cal-monthly', component: CalMonthViewComponent}
+  {path: 'calendar', component: CalMonthViewComponent}
 ];
 
 @NgModule({
