@@ -106,6 +106,25 @@ func CloseDBConnection() {
 	cdb.Close()
 }
 
+// Delete deletes a event identified by id
+func Delete(id string) {
+
+}
+
+// DeleteDummy deletes a dummy event identified by id
+func DeleteDummy(id string) string {
+	mtx.Lock()
+	for idx, e := range events {
+		if e.ID == id {
+			events = append(events[:idx], events[idx+1:]...)
+			mtx.Unlock()
+			return id
+		}
+	}
+	mtx.Unlock()
+	return ""
+}
+
 func addEventToDatabase(event *Event) int64 {
 	sdString := event.StartDate.Format("2006-01-02 15:04:05")
 	edString := event.EndDate.Format("2006-01-02 15:04:05")

@@ -32,6 +32,13 @@ func AddEventHandler(c *gin.Context) {
 	c.JSON(code, gin.H{"id": event.Add(e)})
 }
 
+// DeleteDummyEventHandler deletes the event with given id
+func DeleteDummyEventHandler(c *gin.Context) {
+	id := c.Param("id")
+	res := event.DeleteDummy(id)
+	c.JSON(http.StatusOK, gin.H{"id_to_delete": res})
+}
+
 // AddDummyEventHandler adds a new event to the dummy events
 func AddDummyEventHandler(c *gin.Context) {
 	e, code, err := eventFromRequest(c.Request)

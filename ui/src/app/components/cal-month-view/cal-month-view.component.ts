@@ -24,20 +24,20 @@ export class CalMonthViewComponent implements OnInit {
 
   modalData: {
     action: string;
-    event: CalendarEvent;
+    event: DatabaseCalendarEvent;
   };
 
   actions: CalendarEventAction[] = [
     {
       label: '<i class="fa fa-fw fa-pencil"></i>',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
+      onClick: ({ event }: { event: DatabaseCalendarEvent }): void => {
         this.handleEvent('Edited', event);
       }
     },
     {
       label: '<i class="fa fa-fw fa-times"></i>',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter(iEvent => iEvent !== event);
+      onClick: ({ event }: { event: DatabaseCalendarEvent }): void => {
+        this.deleteEvent(event);
         this.handleEvent('Deleted', event);
       }
     }
@@ -84,18 +84,23 @@ export class CalMonthViewComponent implements OnInit {
     newStart,
     newEnd
   }: CalendarEventTimesChangedEvent): void {
-      this.events = this.events.map(e => {
+    let modified: DatabaseCalendarEvent;
+    this.events = this.events.map(e => {
         if (e.id === event.id) {
           e.start = newStart;
           e.end = newEnd;
+          modified = e;
         }
         return e;
       });
-      this.handleEvent('Dropped or resized', event);
+    this.handleEvent('Dropped or resized', modified);
   }
 
-  deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter(event => event !== eventToDelete);
+  deleteEvent(eventToDelete: DatabaseCalendarEvent) {
+    this.eventService.deleteCalendarEvent(eventToDelete).subscribe(resp => {
+      console.log(resp);
+      this.getEvents();
+    });
   }
 
   setView(view: CalendarView) {
@@ -106,7 +111,7 @@ export class CalMonthViewComponent implements OnInit {
     this.activeDayIsOpen = false;
   }
 
-  handleEvent(action: string, event: CalendarEvent): void {
+  handleEvent(action: string, event: DatabaseCalendarEvent): void {
     this.modalData = { event, action };
     this.modal.open(this.modalContent, { size: 'lg' });
   }
