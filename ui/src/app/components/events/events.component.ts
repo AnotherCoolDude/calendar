@@ -29,6 +29,9 @@ export class EventsComponent implements OnInit {
       } else if (change === Change.Delete) {
         console.log('Event deleted');
         this.getEvents();
+      } else if (change === Change.Update) {
+        console.log('Event updated');
+        this.getEvents();
       }
     });
   }

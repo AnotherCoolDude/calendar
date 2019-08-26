@@ -3,9 +3,11 @@ package event
 import (
 	"database/sql"
 	"fmt"
-	"github.com/rs/xid"
+	"strings"
 	"sync"
 	"time"
+
+	"github.com/rs/xid"
 
 	"github.com/AnotherCoolDude/calendar/database"
 )
@@ -42,6 +44,10 @@ type Event struct {
 
 // GenerateID generates a new id for e
 func (e *Event) GenerateID() {
+	if strings.TrimSpace(e.ID) != "" {
+		fmt.Println("event allready has id")
+		return
+	}
 	e.ID = xid.New().String()
 }
 
@@ -52,8 +58,8 @@ func Get() []Event {
 	return ee
 }
 
-// GetDummyEvents returns dummy events for testing purposes
-func GetDummyEvents() []Event {
+// GetDummys returns dummy events for testing purposes
+func GetDummys() []Event {
 	if len(events) == 0 {
 		events = []Event{
 			Event{
@@ -93,8 +99,8 @@ func Add(event Event) string {
 	return event.ID
 }
 
-// AddDummyEvent adds a new dummy event to events
-func AddDummyEvent(event Event) string {
+// AddDummy adds a new dummy event to events
+func AddDummy(event Event) string {
 	mtx.Lock()
 	events = append(events, event)
 	mtx.Unlock()
@@ -119,6 +125,25 @@ func DeleteDummy(id string) string {
 			events = append(events[:idx], events[idx+1:]...)
 			mtx.Unlock()
 			return id
+		}
+	}
+	mtx.Unlock()
+	return ""
+}
+
+// Update updates the given event
+func Update(event Event) {
+
+}
+
+// UpdateDummy updates the given event
+func UpdateDummy(event Event) string {
+	mtx.Lock()
+	for idx, e := range events {
+		if event.ID == e.ID {
+			events[idx] = event
+			mtx.Unlock()
+			return events[idx].ID
 		}
 	}
 	mtx.Unlock()

@@ -20,6 +20,7 @@ func main() {
 	calendar.GET("/devent", handler.GetDummysEventsHandler)
 	calendar.POST("/devent", handler.AddDummyEventHandler)
 	calendar.DELETE("/devent", handler.DeleteDummyEventHandler)
+	calendar.PUT("/devent", handler.UpdateDummyEventHandler)
 
 	r.NoRoute(func(c *gin.Context) {
 		dir, file := path.Split(c.Request.RequestURI)

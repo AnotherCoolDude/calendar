@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/AnotherCoolDude/calendar/event"
@@ -18,7 +17,7 @@ func GetEventsHandler(c *gin.Context) {
 
 // GetDummysEventsHandler returns dummy events
 func GetDummysEventsHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, event.GetDummyEvents())
+	c.JSON(http.StatusOK, event.GetDummys())
 }
 
 // AddEventHandler adds a new event to events
@@ -34,9 +33,13 @@ func AddEventHandler(c *gin.Context) {
 
 // DeleteDummyEventHandler deletes the event with given id
 func DeleteDummyEventHandler(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Query("id")
 	res := event.DeleteDummy(id)
-	c.JSON(http.StatusOK, gin.H{"id_to_delete": res})
+	if res == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"requsted_id": id})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"deleted_id": res})
 }
 
 // AddDummyEventHandler adds a new event to the dummy events
@@ -47,13 +50,24 @@ func AddDummyEventHandler(c *gin.Context) {
 		c.JSON(code, err)
 		return
 	}
-	c.JSON(code, gin.H{"id": event.AddDummyEvent(e)})
+	c.JSON(code, gin.H{"id": event.AddDummy(e)})
+}
+
+// UpdateDummyEventHandler updates the dummy event
+func UpdateDummyEventHandler(c *gin.Context) {
+	e, code, err := eventFromRequest(c.Request)
+
+	if err != nil {
+		c.JSON(code, err)
+		return
+	}
+	c.JSON(code, gin.H{"id": event.UpdateDummy(e)})
 }
 
 func eventFromRequest(req *http.Request) (event.Event, int, error) {
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		log.Println("[handler.go] couldn't read request body")
+		fmt.Println("[handler.go] couldn't read request body")
 		return event.Event{}, http.StatusBadRequest, err
 	}
 	defer req.Body.Close()
@@ -62,7 +76,7 @@ func eventFromRequest(req *http.Request) (event.Event, int, error) {
 	err = json.Unmarshal(body, &e)
 	fmt.Printf("[handler.go] new event received: %+v\n", e)
 	if err != nil {
-		log.Println("[handler.go] couldn't unmarshal request body")
+		fmt.Println("[handler.go] couldn't unmarshal request body")
 		return event.Event{}, http.StatusBadRequest, err
 	}
 	e.GenerateID()

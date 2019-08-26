@@ -45,7 +45,12 @@ export class CalendarEventsService {
 
   deleteCalendarEvent(event: DatabaseCalendarEvent): Observable<any> {
     this.notificationSource.next(Change.Delete);
-    return this.httpClient.delete<string>(environment.gateway + '/devent', {params: {['id']: event.id}});
+    return this.httpClient.delete(environment.gateway + '/devent', {params:{['id']:event.id}});
+  }
+
+  updateCalendarEvent(event: DatabaseCalendarEvent): Observable<string> {
+    this.notificationSource.next(Change.Update);
+    return this.httpClient.put<string>(environment.gateway + '/devent', event.dbObject());
   }
 
 }
