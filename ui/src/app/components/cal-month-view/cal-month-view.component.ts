@@ -84,10 +84,10 @@ export class CalMonthViewComponent implements OnInit {
     newStart,
     newEnd
   }: CalendarEventTimesChangedEvent): void {
-    const selectedEvents = this.events.filter(dce => {return dce.id === event.id});
+    const selectedEvents = this.events.filter(dce => dce.id === event.id);
     if (selectedEvents.length !== 1) {
       console.log('either none or more than one events with matching id found');
-      return
+      return;
     }
     selectedEvents[0].start = newStart;
     selectedEvents[0].end = newEnd;
